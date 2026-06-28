@@ -1,10 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
 
-// Create axios instance with base URL
-// In development, Vite proxy forwards /api to http://localhost:5000
-// In production, use the environment variable or default
 const API = axios.create({
-  baseURL: '${import.meta.env.VITE_API_URL || "}/api/tasks',
+  baseURL: `${import.meta.env.VITE_API_URL || ''}/api/tasks`,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -16,47 +13,54 @@ const API = axios.create({
  * @returns {Promise} Axios response
  */
 export const getAllTasks = async (params = {}) => {
-  const response = await API.get('/tasks', { params });
-  return response=await API.get('/',{params});
+  const response = await API.get('/', { params });
+  return response.data;
 };
 
 /**
  * Get a single task by ID
  * @param {string} id - Task ID
- * @returns {Promise} Axios response
  */
-export const getTask = async (id) => {
-  const response = await API.get(`/tasks/${id}`);
+export const getTaskById = async (id) => {
+  const response = await API.get(`/${id}`);
   return response.data;
 };
 
 /**
  * Create a new task
- * @param {Object} taskData - Task data to create
- * @returns {Promise} Axios response
+ * @param {Object} taskData - Task fields
  */
 export const createTask = async (taskData) => {
-  const response = await API.post('/tasks', taskData);
+  const response = await API.post('/', taskData);
   return response.data;
 };
 
 /**
  * Update an existing task
  * @param {string} id - Task ID
- * @param {Object} taskData - Updated task data
- * @returns {Promise} Axios response
+ * @param {Object} taskData - Updated fields
  */
 export const updateTask = async (id, taskData) => {
-  const response = await API.put(`/tasks/${id}`, taskData);
+  const response = await API.put(`/${id}`, taskData);
   return response.data;
 };
 
 /**
  * Delete a task
  * @param {string} id - Task ID
- * @returns {Promise} Axios response
  */
 export const deleteTask = async (id) => {
-  const response = await API.delete(`/tasks/${id}`);
+  const response = await API.delete(`/${id}`);
   return response.data;
 };
+
+/**
+ * Toggle task completion
+ * @param {string} id - Task ID
+ */
+export const toggleComplete = async (id) => {
+  const response = await API.put(`/${id}/complete`);
+  return response.data;
+};
+
+export default API;
